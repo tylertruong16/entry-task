@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.logging.Level;
@@ -37,11 +38,12 @@ public class ProfileManagerRepo {
     }
 
     public Optional<ProfileItem> getProfileByEmail(String email) {
-        var id = Base64.getEncoder().encode(email.getBytes());
+        var id = new String(Base64.getEncoder().encode(email.getBytes(StandardCharsets.UTF_8)));
         var url = profileTableUrl + "/" + id;
         var header = HttpUtil.getHeaderPostRequest();
         header.add(HEADER_KEY_NAME, headerKey);
-        var response = HttpUtil.sendRequest(profileTableUrl, header).getBody();
+        var response = HttpUtil.sendRequest(url, header).getBody();
+        log.log(Level.INFO, "cloud-shell-task >> getProfileByEmail >> email: {0} >> url: {1} >> response: {2}", new Object[]{email, url, response});
         return JsonConverter.convertToObject(response, ProfileItem.class);
     }
 

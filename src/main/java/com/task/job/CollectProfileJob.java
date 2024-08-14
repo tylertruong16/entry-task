@@ -26,7 +26,7 @@ public class CollectProfileJob {
         this.profileManagerRepo = profileManagerRepo;
     }
 
-    @Scheduled(fixedDelay = 1, initialDelay = 2, timeUnit = TimeUnit.MINUTES)
+    @Scheduled(fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
     void keepAliveProfile() {
         try {
             var profile = profileManagerRepo.getProfileByEmail(emailProfile);
@@ -36,6 +36,7 @@ public class CollectProfileJob {
                 clone.setStatus("ONLINE");
                 clone.setUpdateDate(updateAt);
                 log.log(Level.INFO, "cloud-shell-task >> CollectProfileJob >> keepAliveProfile >> email: {0} >> updateAt: {1}", new Object[]{emailProfile, updateAt});
+                profileManagerRepo.saveProfileItem(clone);
             }
         } catch (Exception e) {
             log.log(Level.WARNING, MessageFormat.format("cloud-shell-task >> CollectProfileJob >> keepAliveProfile >> email: {0} >> Exception:", emailProfile), e);
