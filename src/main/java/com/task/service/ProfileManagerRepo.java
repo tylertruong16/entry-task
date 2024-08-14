@@ -10,10 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 
 @Repository
@@ -37,6 +34,15 @@ public class ProfileManagerRepo {
             log.log(Level.WARNING, "cloud-shell-task >> getAllProfile >> Exception:", e);
             return new ArrayList<>();
         }
+    }
+
+    public Optional<ProfileItem> getProfileByEmail(String email) {
+        var id = Base64.getEncoder().encode(email.getBytes());
+        var url = profileTableUrl + "/" + id;
+        var header = HttpUtil.getHeaderPostRequest();
+        header.add(HEADER_KEY_NAME, headerKey);
+        var response = HttpUtil.sendRequest(profileTableUrl, header).getBody();
+        return JsonConverter.convertToObject(response, ProfileItem.class);
     }
 
     public boolean saveProfileItem(ProfileItem profileItem) {

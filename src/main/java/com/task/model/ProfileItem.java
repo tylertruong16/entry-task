@@ -35,6 +35,10 @@ public class ProfileItem implements Serializable {
         return StringUtils.isBlank(this.getProfileFolderUrl()) && StringUtils.isNoneBlank(this.getUpdateDate());
     }
 
+    public boolean offlineProfile() {
+        return StringUtils.equalsIgnoreCase("OFFLINE", this.getStatus());
+    }
+
     public ZonedDateTime parseUpdateDate() {
         try {
             var formatter = DateTimeFormatter.ISO_ZONED_DATE_TIME;
