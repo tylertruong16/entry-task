@@ -39,6 +39,19 @@ public class ProfileItem implements Serializable {
         return StringUtils.equalsIgnoreCase("OFFLINE", this.getStatus());
     }
 
+    public boolean validDownloadUrl() {
+        return StringUtils.isNoneBlank(this.getProfileFolderUrl());
+    }
+
+    public boolean nonOnline() {
+        return !onlineProfile();
+    }
+
+
+    public boolean onlineProfile() {
+        return StringUtils.equalsIgnoreCase("ONLINE", this.getStatus());
+    }
+
     public ZonedDateTime parseUpdateDate() {
         try {
             var formatter = DateTimeFormatter.ISO_ZONED_DATE_TIME;

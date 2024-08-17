@@ -14,6 +14,8 @@ import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Optional;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 @UtilityClass
 @Log
@@ -92,6 +94,27 @@ public class FileSplitter {
                     int bytesRead;
                     while ((bytesRead = bis.read(buffer)) != -1) {
                         bos.write(buffer, 0, bytesRead);
+                    }
+                }
+            }
+        }
+    }
+
+    public static void unzip(String zipFile, String destFolder) throws IOException {
+        try (ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFile))) {
+            ZipEntry entry;
+            byte[] buffer = new byte[1024];
+            while ((entry = zis.getNextEntry()) != null) {
+                File newFile = new File(destFolder + File.separator + entry.getName());
+                if (entry.isDirectory()) {
+                    newFile.mkdirs();
+                } else {
+                    new File(newFile.getParent()).mkdirs();
+                    try (FileOutputStream fos = new FileOutputStream(newFile)) {
+                        int length;
+                        while ((length = zis.read(buffer)) > 0) {
+                            fos.write(buffer, 0, length);
+                        }
                     }
                 }
             }
