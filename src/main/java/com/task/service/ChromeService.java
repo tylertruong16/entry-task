@@ -42,7 +42,6 @@ public class ChromeService {
         var options = createProfile(email, new ChromeOptions());
         var driver = new ChromeDriver(options);
         try {
-            var startTime = LocalDateTime.now();
             driver.get(GOOGLE_ACCOUNT_PAGE);
             Thread.sleep(Duration.ofSeconds(5));
             var loginSuccess = loginSuccess(driver, "ACCOUNT_PAGE");
@@ -69,13 +68,16 @@ public class ChromeService {
                     Thread.sleep(TimeUnit.SECONDS.toMillis(3));
                 }
                 log.log(Level.INFO, "entry-task >> ChromeService >> connectGoogle >> email: {0} >> title: {1}", new Object[]{email, driver.getTitle()});
-                var recheckLogin = loginSuccess(driver, "CLOUD_SHELL_PAGE");
-                while (Duration.between(startTime, LocalDateTime.now()).toMinutes() < 10 || recheckLogin) {
+                var startTime = LocalDateTime.now();
+                while (Duration.between(startTime, LocalDateTime.now()).toMinutes() < TimeUnit.MINUTES.toMinutes(5)) {
                     Thread.sleep(Duration.ofSeconds(5));
                     log.log(Level.INFO, "entry-task >> ChromeService >> connectGoogle >> email: {0} >> pageTitle: {1} >> url: {2}", new Object[]{email, driver.getTitle(), driver.getCurrentUrl()});
-                    recheckLogin = loginSuccess(driver, "CLOUD_SHELL_PAGE");
+                    var canConnectCloudShellPage = loginSuccess(driver, "CLOUD_SHELL_PAGE");
+                    if (!canConnectCloudShellPage) {
+                        break;
+                    }
                 }
-
+                return loginSuccess(driver, "CLOUD_SHELL_PAGE") ? ConnectStatus.SUCCESS : ConnectStatus.FAILURE;
             }
             return ConnectStatus.FAILURE;
         } catch (Exception e) {
