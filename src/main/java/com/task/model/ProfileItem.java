@@ -28,7 +28,7 @@ public class ProfileItem implements Serializable {
     public static ProfileItem createOfflineProfile(String email, String username) {
         var updateAt = DateTimeFormatter.ISO_INSTANT.format(Instant.now());
         var id = new String(Base64.getEncoder().encode(email.getBytes(StandardCharsets.UTF_8)));
-        return new ProfileItem(id, email, "OFFLINE", updateAt, "", username);
+        return new ProfileItem(id, email, ProfileStatus.OFFLINE.name(), updateAt, "", username);
     }
 
     public boolean notUpdateProfileFolder() {
@@ -36,7 +36,7 @@ public class ProfileItem implements Serializable {
     }
 
     public boolean offlineProfile() {
-        return StringUtils.equalsIgnoreCase("OFFLINE", this.getStatus());
+        return StringUtils.equalsIgnoreCase(ProfileStatus.OFFLINE.name(), this.getStatus());
     }
 
     public boolean validDownloadUrl() {
@@ -49,7 +49,7 @@ public class ProfileItem implements Serializable {
 
 
     public boolean onlineProfile() {
-        return StringUtils.equalsIgnoreCase("ONLINE", this.getStatus());
+        return StringUtils.equalsIgnoreCase(ProfileStatus.ONLINE.name(), this.getStatus());
     }
 
     public ZonedDateTime parseUpdateDate() {

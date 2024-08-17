@@ -1,5 +1,6 @@
 package com.task.job;
 
+import com.task.model.ProfileStatus;
 import com.task.service.ProfileManagerRepo;
 import lombok.extern.java.Log;
 import org.apache.commons.lang3.SerializationUtils;
@@ -33,7 +34,7 @@ public class CollectProfileJob {
             if (profile.isPresent() && profile.get().offlineProfile()) {
                 var clone = SerializationUtils.clone(profile.get());
                 var updateAt = DateTimeFormatter.ISO_INSTANT.format(Instant.now());
-                clone.setStatus("ONLINE");
+                clone.setStatus(ProfileStatus.ONLINE.name());
                 clone.setUpdateDate(updateAt);
                 log.log(Level.INFO, "entry-task >> CollectProfileJob >> keepAliveProfile >> email: {0} >> updateAt: {1}", new Object[]{emailProfile, updateAt});
                 profileManagerRepo.saveProfileItem(clone);

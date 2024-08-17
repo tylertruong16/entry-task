@@ -3,6 +3,7 @@ package com.task.job;
 import com.task.common.FileUtil;
 import com.task.model.AccountStatusTrack;
 import com.task.model.ConnectStatus;
+import com.task.model.ProfileStatus;
 import com.task.service.ChromeService;
 import com.task.service.ProfileManagerRepo;
 import lombok.extern.java.Log;
@@ -84,7 +85,7 @@ public class KeepAliveAccountJob {
                     var updateAt = DateTimeFormatter.ISO_INSTANT.format(Instant.now());
                     clone.setUpdateDate(updateAt);
                     clone.setProfileFolderUrl("");
-                    clone.setStatus("LOST_CONNECTION");
+                    clone.setStatus(ProfileStatus.LOST_CONNECTION.name());
                     profileManagerRepo.saveProfileItem(clone);
                     var userFolderDownLoadName = Paths.get(System.getProperty("user.home"), chromeProfileDownloadFolder, it.getEmail()).toString();
                     var deletedResult = FileUtil.deleteFolder(new File(userFolderDownLoadName));
