@@ -99,8 +99,8 @@ public class ChromeService {
                 public Boolean apply(WebDriver driver) {
                     try {
                         if (StringUtils.equalsIgnoreCase("CLOUD_SHELL_PAGE", page)) {
-                            var text = driver.findElement(By.className("cfc-accountchooser-link")).getAttribute("aria-label");
-                            return StringUtils.containsIgnoreCase(text, "Account:");
+                            var currentUrl = driver.getCurrentUrl();
+                            return StringUtils.containsIgnoreCase(currentUrl, "console.cloud.google.com");
                         }
                         driver.findElement(By.xpath("//a[contains(@href, 'accounts.google.com/SignOutOptions')]"));
                         return true; // Profile icon found, already signed in

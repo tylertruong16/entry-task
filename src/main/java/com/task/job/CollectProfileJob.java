@@ -35,11 +35,11 @@ public class CollectProfileJob {
                 var updateAt = DateTimeFormatter.ISO_INSTANT.format(Instant.now());
                 clone.setStatus("ONLINE");
                 clone.setUpdateDate(updateAt);
-                log.log(Level.INFO, "cloud-shell-task >> CollectProfileJob >> keepAliveProfile >> email: {0} >> updateAt: {1}", new Object[]{emailProfile, updateAt});
+                log.log(Level.INFO, "entry-task >> CollectProfileJob >> keepAliveProfile >> email: {0} >> updateAt: {1}", new Object[]{emailProfile, updateAt});
                 profileManagerRepo.saveProfileItem(clone);
             }
         } catch (Exception e) {
-            log.log(Level.WARNING, MessageFormat.format("cloud-shell-task >> CollectProfileJob >> keepAliveProfile >> email: {0} >> Exception:", emailProfile), e);
+            log.log(Level.WARNING, MessageFormat.format("entry-task >> CollectProfileJob >> keepAliveProfile >> email: {0} >> Exception:", emailProfile), e);
         }
 
     }

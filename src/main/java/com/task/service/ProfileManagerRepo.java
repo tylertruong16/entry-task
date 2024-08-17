@@ -32,7 +32,7 @@ public class ProfileManagerRepo {
             var response = HttpUtil.sendRequest(profileTableUrl, header).getBody();
             return Arrays.stream(JsonConverter.convertToObject(response, ProfileItem[].class).orElse(new ProfileItem[]{})).toList();
         } catch (Exception e) {
-            log.log(Level.WARNING, "cloud-shell-task >> getAllProfile >> Exception:", e);
+            log.log(Level.WARNING, "entry-task >> getAllProfile >> Exception:", e);
             return new ArrayList<>();
         }
     }
@@ -43,7 +43,7 @@ public class ProfileManagerRepo {
         var header = HttpUtil.getHeaderPostRequest();
         header.add(HEADER_KEY_NAME, headerKey);
         var response = HttpUtil.sendRequest(url, header).getBody();
-        log.log(Level.INFO, "cloud-shell-task >> getProfileByEmail >> email: {0} >> url: {1} >> response: {2}", new Object[]{email, url, response});
+        log.log(Level.INFO, "entry-task >> getProfileByEmail >> email: {0} >> url: {1} >> response: {2}", new Object[]{email, url, response});
         return JsonConverter.convertToObject(response, ProfileItem.class);
     }
 
@@ -54,13 +54,13 @@ public class ProfileManagerRepo {
             var url = MessageFormat.format("{0}/{1}", profileTableUrl, "insert");
             var header = HttpUtil.getHeaderPostRequest();
             header.add(HEADER_KEY_NAME, headerKey);
-            log.log(Level.INFO, "cloud-shell-task >> saveProfileItem >> json: {0} >> logId: {1}", new Object[]{JsonConverter.convertObjectToJson(profileItem), logId});
+            log.log(Level.INFO, "entry-task >> saveProfileItem >> json: {0} >> logId: {1}", new Object[]{JsonConverter.convertObjectToJson(profileItem), logId});
             var response = HttpUtil.sendPostRequest(url, json, header).getBody();
-            log.log(Level.INFO, "cloud-shell-task >> saveProfileItem >> json: {0} >> logId: {1} >> response: {2}", new Object[]{JsonConverter.convertObjectToJson(profileItem), logId, response});
+            log.log(Level.INFO, "entry-task >> saveProfileItem >> json: {0} >> logId: {1} >> response: {2}", new Object[]{JsonConverter.convertObjectToJson(profileItem), logId, response});
             var jsonObject = new JSONObject(response);
             return jsonObject.has("updated");
         } catch (Exception e) {
-            log.log(Level.WARNING, MessageFormat.format("cloud-shell-task >> saveProfileItem >> logId: {0} >> json: {1} >> Exception:", logId, json), e);
+            log.log(Level.WARNING, MessageFormat.format("entry-task >> saveProfileItem >> logId: {0} >> json: {1} >> Exception:", logId, json), e);
             return false;
         }
 
