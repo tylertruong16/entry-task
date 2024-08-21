@@ -46,7 +46,7 @@ public class KeepAliveAccountJob {
     }
 
 
-    @Scheduled(fixedDelay = 3, timeUnit = TimeUnit.SECONDS)
+//    @Scheduled(fixedDelay = 3, timeUnit = TimeUnit.SECONDS)
     void connectGooglePage() {
         try {
             var profile = profileManagerRepo.getProfileByEmail(emailProfile);

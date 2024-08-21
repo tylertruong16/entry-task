@@ -28,8 +28,8 @@ import java.util.logging.Level;
 @Log
 public class ChromeService {
 
-    private static final String GOOGLE_ACCOUNT_PAGE = "https://accounts.google.com";
-    private static final String GOOGLE_SHELL_PAGE = "https://console.cloud.google.com";
+    public static final String GOOGLE_ACCOUNT_PAGE = "https://accounts.google.com";
+    public static final String GOOGLE_SHELL_PAGE = "https://console.cloud.google.com";
     private static final String SHELL_FRAME_NAME = "cloudshell-frame";
 
     @Value("${system.headless-mode}")
@@ -69,7 +69,7 @@ public class ChromeService {
                 }
                 log.log(Level.INFO, "entry-task >> ChromeService >> connectGoogle >> email: {0} >> title: {1}", new Object[]{email, driver.getTitle()});
                 var startTime = LocalDateTime.now();
-                while (Duration.between(startTime, LocalDateTime.now()).toMinutes() < TimeUnit.MINUTES.toMinutes(5)) {
+                while (Duration.between(startTime, LocalDateTime.now()).toMinutes() < TimeUnit.MINUTES.toMinutes(10)) {
                     Thread.sleep(Duration.ofSeconds(5));
                     log.log(Level.INFO, "entry-task >> ChromeService >> connectGoogle >> email: {0} >> pageTitle: {1} >> url: {2}", new Object[]{email, driver.getTitle(), driver.getCurrentUrl()});
                     var canConnectCloudShellPage = loginSuccess(driver, "CLOUD_SHELL_PAGE");
@@ -89,7 +89,7 @@ public class ChromeService {
     }
 
 
-    private boolean loginSuccess(ChromeDriver driver, String page) {
+    public boolean loginSuccess(ChromeDriver driver, String page) {
         try {
             var wait = new FluentWait<WebDriver>(driver)
                     .withTimeout(Duration.ofMinutes(2))
@@ -162,8 +162,10 @@ public class ChromeService {
 
     public ChromeOptions createProfile(String folderName, ChromeOptions options) {
         try {
-            var profilePath = Paths.get(System.getProperty("user.home"), userProfileExtractFolder, folderName).toString();
-            options.addArguments(MessageFormat.format("user-data-dir={0}", profilePath));
+            if (StringUtils.isNoneBlank()) {
+                var profilePath = Paths.get(System.getProperty("user.home"), userProfileExtractFolder, folderName).toString();
+                options.addArguments(MessageFormat.format("user-data-dir={0}", profilePath));
+            }
             options.addArguments("--disable-web-security");
             // this option so important to bypass google detection
             options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
