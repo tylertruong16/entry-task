@@ -1,7 +1,7 @@
 package com.task.job;
 
 import com.task.model.ProfileStatus;
-import com.task.service.ProfileManagerRepo;
+import com.task.repo.ProfileManagerRepo;
 import lombok.extern.java.Log;
 import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,6 +1,10 @@
 spring:
   application:
     name: entry-task
+  task:
+    scheduling:
+      pool:
+        size: 30
 server:
   port: 7173
   servlet:
@@ -9,6 +13,7 @@ server:
 system:
   id: "${REALM:browser-task}"
   profile-table-url: "${PROFILE_TABLE_URL: your url to save profile after login success}"
+  worker-task-table-url: "${WORKER_TASK_TABLE: your url to worker task table}"
   email-profile: "${EMAIL:tylertruong24@gmail.com}"
   headless-mode: "${HEADLESS_MODE:false}"
 

@@ -1,6 +1,7 @@
 package com.task.service;
 
 import com.task.model.ConnectStatus;
+import lombok.SneakyThrows;
 import lombok.extern.java.Log;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;

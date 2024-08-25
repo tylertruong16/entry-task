@@ -5,7 +5,7 @@ import com.task.model.AccountStatusTrack;
 import com.task.model.ConnectStatus;
 import com.task.model.ProfileStatus;
 import com.task.service.ChromeService;
-import com.task.service.ProfileManagerRepo;
+import com.task.repo.ProfileManagerRepo;
 import lombok.extern.java.Log;
 import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,7 +46,7 @@ public class KeepAliveAccountJob {
     }
 
 
-//    @Scheduled(fixedDelay = 3, timeUnit = TimeUnit.SECONDS)
+    @Scheduled(fixedDelay = 3, timeUnit = TimeUnit.SECONDS)
     void connectGooglePage() {
         try {
             var profile = profileManagerRepo.getProfileByEmail(emailProfile);

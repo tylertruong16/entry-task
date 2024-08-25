@@ -2,11 +2,10 @@ package com.task.job;
 
 
 import com.task.common.FileSplitter;
-import com.task.common.FileUtil;
 import com.task.github.model.GitHubConfig;
 import com.task.github.service.GitHubService;
 import com.task.model.ProfileItem;
-import com.task.service.ProfileManagerRepo;
+import com.task.repo.ProfileManagerRepo;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
