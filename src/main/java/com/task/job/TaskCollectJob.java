@@ -31,10 +31,10 @@ public class TaskCollectJob {
         this.chatGptService = chatGptService;
     }
 
-    @Scheduled(fixedDelay = 3, timeUnit = TimeUnit.SECONDS)
+    @Scheduled(fixedDelay = 7, timeUnit = TimeUnit.SECONDS)
     void loadNewTask() {
         try {
-            var openTasks = taskRepo.loadTaskBelongToWorker()
+            var openTasks = taskRepo.loadTaskBelongToWorker(TaskState.OPEN)
                     .stream()
                     .filter(TaskModel::openTask)
                     .toList();

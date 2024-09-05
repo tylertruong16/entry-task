@@ -16,6 +16,7 @@ system:
   email-profile: "${EMAIL:tylertruong24@gmail.com}"
   headless-mode: "${HEADLESS_MODE:false}"
   disable-keep-alive-profile: "${DISABLE-KEEP-ALIVE-PROFILE:false}"
+  callback-url: "${CALLBACK_URL:***}"
 
 profile-folder:
   user-profile: "${CLOUD_SHELL_CHROME_PROFILE_FOLDER:entry-task-chrome-profiles-download-extract}"

@@ -22,6 +22,10 @@ public class TaskModel implements Serializable {
     private int callbackCount = 0;
 
 
+    public CallBackTask convertToCallbackJob() {
+        return new CallBackTask(id, serviceCode, output);
+    }
+
     public boolean openTask() {
         return StringUtils.equalsIgnoreCase(taskStatus, TaskState.OPEN.name());
     }
