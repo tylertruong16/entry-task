@@ -4,8 +4,8 @@ import com.task.common.FileUtil;
 import com.task.model.AccountStatusTrack;
 import com.task.model.ConnectStatus;
 import com.task.model.ProfileStatus;
-import com.task.service.ChromeService;
 import com.task.repo.ProfileManagerRepo;
+import com.task.service.ChromeService;
 import lombok.extern.java.Log;
 import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,6 +38,9 @@ public class KeepAliveAccountJob {
     @Value("${profile-folder.user-profile}")
     private String userProfileExtractFolder;
 
+    @Value("${system.disable-keep-alive-profile}")
+    private boolean disableKeepAliveProfile;
+
     Map<String, AccountStatusTrack> trackStatus = new ConcurrentHashMap<>();
 
     public KeepAliveAccountJob(ChromeService chromeService, ProfileManagerRepo profileManagerRepo) {
@@ -49,6 +52,9 @@ public class KeepAliveAccountJob {
     @Scheduled(fixedDelay = 3, timeUnit = TimeUnit.SECONDS)
     void connectGooglePage() {
         try {
+            if (disableKeepAliveProfile) {
+                return;
+            }
             var profile = profileManagerRepo.getProfileByEmail(emailProfile);
             if (profile.isPresent() && profile.get().onlineProfile()) {
                 var it = profile.get();
@@ -77,6 +83,9 @@ public class KeepAliveAccountJob {
     @Scheduled(fixedDelay = 3, initialDelay = 3, timeUnit = TimeUnit.MINUTES)
     void clearProfileIfFailedLogin() {
         try {
+            if (disableKeepAliveProfile) {
+                return;
+            }
             var profile = profileManagerRepo.getProfileByEmail(emailProfile);
             profile.ifPresent(it -> {
                 var previous = Optional.ofNullable(trackStatus.get(it.getEmail())).orElse(new AccountStatusTrack(it.getEmail(), 0));

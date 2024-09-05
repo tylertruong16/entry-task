@@ -27,8 +27,9 @@ public class TaskRepo {
 
     @Value("${system.id}")
     private String headerKey;
-    @Value("${system.worker-task-table-url}")
-    private String workerTaskTableUrl;
+
+    @Value("${system.database-json-url}")
+    private String databaseJsonUrl;
 
     @Value("${system.email-profile}")
     private String emailProfile;
@@ -37,13 +38,17 @@ public class TaskRepo {
     public List<TaskModel> loadTaskBelongToWorker() {
         var workerId = Base64.encodeBase64String(emailProfile.getBytes(StandardCharsets.UTF_8));
         try {
+            var url = MessageFormat.format("{0}/{1}", databaseJsonUrl, "worker_task");
+            var byId = MessageFormat.format("/search?filters=workerId::::{0}", workerId);
+            var byStatus = MessageFormat.format("&filters=taskStatus::::{0}", "OPEN");
+            var fullUrl = MessageFormat.format("{0}{1}{2}", url, byId, byStatus);
             var header = HttpUtil.getHeaderPostRequest();
             header.add(HEADER_KEY_NAME, headerKey);
-            var response = HttpUtil.sendRequest(workerTaskTableUrl, header).getBody();
-            return Arrays.stream(JsonConverter.convertToObject(response, TaskModel[].class)
-                            .orElse(new TaskModel[]{}))
-                    .filter(it -> StringUtils.equalsIgnoreCase(it.getWorkerId(), workerId))
-                    .toList();
+            var response = HttpUtil.sendRequest(fullUrl, header).getBody();
+            var jsonObject = new JSONObject(response);
+            var data = jsonObject.getJSONArray("data").toString();
+            return Arrays.stream(JsonConverter.convertToObject(data, TaskModel[].class)
+                            .orElse(new TaskModel[]{})).toList();
         } catch (Exception e) {
             log.log(Level.WARNING, "entry-task >> loadTaskBelongToWorker >> Exception:", e);
             return new ArrayList<>();
@@ -54,7 +59,7 @@ public class TaskRepo {
         var logId = UUID.randomUUID().toString();
         var json = JsonConverter.convertObjectToJson(data);
         try {
-            var url = MessageFormat.format("{0}/{1}", workerTaskTableUrl, "insert");
+            var url = MessageFormat.format("{0}/{1}/insert", databaseJsonUrl, "worker_task");
             var header = HttpUtil.getHeaderPostRequest();
             header.add(HEADER_KEY_NAME, headerKey);
             log.log(Level.INFO, "entry-task >> saveTaskModel >> json: {0} >> logId: {1}", new Object[]{JsonConverter.convertObjectToJson(data), logId});

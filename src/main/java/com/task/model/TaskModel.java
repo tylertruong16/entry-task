@@ -13,11 +13,13 @@ import java.io.Serializable;
 public class TaskModel implements Serializable {
     private String workerId;
     private String id;
+    private String serviceCode;
     private String taskType;
     private String input;
     private String output;
     private String taskStatus;
     private String updateAt;
+    private int callbackCount = 0;
 
 
     public boolean openTask() {

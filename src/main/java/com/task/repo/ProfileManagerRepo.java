@@ -22,24 +22,13 @@ public class ProfileManagerRepo {
 
     @Value("${system.id}")
     private String headerKey;
-    @Value("${system.profile-table-url}")
-    private String profileTableUrl;
 
-    public List<ProfileItem> getAllProfile() {
-        try {
-            var header = HttpUtil.getHeaderPostRequest();
-            header.add(HEADER_KEY_NAME, headerKey);
-            var response = HttpUtil.sendRequest(profileTableUrl, header).getBody();
-            return Arrays.stream(JsonConverter.convertToObject(response, ProfileItem[].class).orElse(new ProfileItem[]{})).toList();
-        } catch (Exception e) {
-            log.log(Level.WARNING, "entry-task >> getAllProfile >> Exception:", e);
-            return new ArrayList<>();
-        }
-    }
+    @Value("${system.database-json-url}")
+    private String databaseJsonUrl;
 
     public Optional<ProfileItem> getProfileByEmail(String email) {
         var id = new String(Base64.getEncoder().encode(email.getBytes(StandardCharsets.UTF_8)));
-        var url = profileTableUrl + "/" + id;
+        var url = databaseJsonUrl + "/profile_manager/"  + id;
         var header = HttpUtil.getHeaderPostRequest();
         header.add(HEADER_KEY_NAME, headerKey);
         var response = HttpUtil.sendRequest(url, header).getBody();
@@ -51,7 +40,7 @@ public class ProfileManagerRepo {
         var logId = UUID.randomUUID().toString();
         var json = JsonConverter.convertObjectToJson(profileItem);
         try {
-            var url = MessageFormat.format("{0}/{1}", profileTableUrl, "insert");
+            var url = databaseJsonUrl + "/profile_manager/insert";
             var header = HttpUtil.getHeaderPostRequest();
             header.add(HEADER_KEY_NAME, headerKey);
             log.log(Level.INFO, "entry-task >> saveProfileItem >> json: {0} >> logId: {1}", new Object[]{JsonConverter.convertObjectToJson(profileItem), logId});

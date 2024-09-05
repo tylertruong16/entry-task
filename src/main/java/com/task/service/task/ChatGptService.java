@@ -126,7 +126,7 @@ public class ChatGptService {
                         .findFirst()
                         .map(WebElement::getText).orElse("");
                 log.log(Level.INFO, "entry-task >> chatResponse: {0}", responseText);
-                updateTask(task, TaskState.IN_PROGRESS, StringUtils.defaultIfBlank(responseText, ""));
+                updateTask(task, TaskState.DONE, StringUtils.defaultIfBlank(responseText, ""));
             }
             clearPreviousQuestion(driver);
         }

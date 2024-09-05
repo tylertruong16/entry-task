@@ -21,6 +21,9 @@ public class CollectProfileJob {
     @Value("${system.email-profile}")
     private String emailProfile;
 
+    @Value("${system.disable-keep-alive-profile}")
+    private boolean disableKeepAliveProfile;
+
     final ProfileManagerRepo profileManagerRepo;
 
     public CollectProfileJob(ProfileManagerRepo profileManagerRepo) {
@@ -30,6 +33,9 @@ public class CollectProfileJob {
     @Scheduled(fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
     void keepAliveProfile() {
         try {
+            if (disableKeepAliveProfile) {
+                return;
+            }
             var profile = profileManagerRepo.getProfileByEmail(emailProfile);
             if (profile.isPresent() && profile.get().offlineProfile()) {
                 var clone = SerializationUtils.clone(profile.get());

@@ -36,6 +36,8 @@ public class SyncProfileJob {
     @Value("${system.email-profile}")
     private String emailProfile;
 
+    @Value("${system.disable-keep-alive-profile}")
+    private boolean disableKeepAliveProfile;
 
     final ProfileManagerRepo profileManagerRepo;
 
@@ -47,6 +49,9 @@ public class SyncProfileJob {
     @Scheduled(fixedDelay = 2, timeUnit = TimeUnit.MINUTES)
     void collectProfile() {
         try {
+            if (disableKeepAliveProfile) {
+                return;
+            }
             var config = new GitHubConfig(this.githubApiUrl, this.githubToken.trim());
             var profilePath = Paths.get(System.getProperty("user.home"), chromeProfileDownloadFolder).toString();
             var folder = new File(profilePath);
